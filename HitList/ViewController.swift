@@ -71,6 +71,25 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // 2
+        let fetchRequest = NSFetchRequest(entityName: "Person")
+        
+        // 3
+        do {
+            let results = try managedContext.executeFetchRequest(fetchRequest)
+            people = results as! [NSManagedObject]
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
+    
     // MARK: UITableViewDataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return people.count
